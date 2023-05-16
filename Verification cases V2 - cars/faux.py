@@ -46,6 +46,7 @@ def zero_finding(arr, v, h):
     
     return h_stab
 
+
 def find_median_curve(XX,YY):
     """
     Takes a list of lines, and finds the median one based on the
@@ -106,7 +107,6 @@ def find_median_curve(XX,YY):
     return i_med
 
 
-
 def get_var(folder, Nr, var_str):
     """
     Access the $var_str$.txt file in the specified folder and generates Nr samples
@@ -145,77 +145,6 @@ def get_var(folder, Nr, var_str):
         var_rand = []
     
     return var_rand
-
-
-
-# SOLVER ----------------------------------------------------------------------
-
-# def get_stability_curves(M,Lx,Ly,Lz,zuf,Cd,mu,PSI_std,nh,nv):
-    
-#     g = 9.8
-#     rhow = 998
-#     # h, vx as key parameters
-#     # nh = 200; nv = 400
-#     h = np.linspace(0, Lz, nh)
-#     v = np.linspace(0, 9.5, nv)
-#     # 
-#     # Start calculations 
-
-#     # Flotation limit state 
-
-#     Ry = M*g # Resistance
-#     eta = get_eta(h, zuf, Lz) # Get an eta for each h?
-#     Sy = rhow*g*eta*h*Lx*Ly # Load
-
-#     hflot = Ry/(rhow*g*eta*Lx*Ly)
-#     ZC = np.where(np.diff(np.sign(hflot-h)))[0] # zero crossings
-#     hcrit_flot = h[ZC[0]]
-
-#     # Sliding limit state
-#     fA = get_PSI_car(h,Lz) + PSI_std # MEAN + DEV.
-
-
-#     H, V = np.meshgrid(h,v)
-#     LHSs = np.zeros_like(H); RHSs = np.zeros_like(H)
-#     Sx = np.zeros_like(H)
-#     for i in range(0, nv): # - velocity
-#         for j in range(0, nh): # - depths
-
-#             Sx[i,j] = 0.5 *(rhow*Cd*fA[j]*Lx*H[i,j]*V[i,j]*V[i,j])
-#             LHSs[i,j] = Sx[i,j] # Sx
-#             RHSs[i,j] = mu*(Ry-Sy[j]) # Rx
-            
-            
-#     # Toppling limit state
-
-#     LHSt = np.zeros_like(H); RHSt = np.zeros_like(H)
-#     for i in range(0, nv):
-#         for j in range(0, nh):
-           
-#             if H[i,j] > zuf:
-#                 yp = (H[i,j]-zuf)/2
-#             else:
-#                 yp = (H[i,j])/2
-#             #xp1 = Ly*(1-eta[j]/3)
-#             xp2 = Ly/2
-#             xp = xp2 # (xp1+xp2)/2
-            
-#             LHSt[i,j] = Sx[i,j]*yp + Sy[j]*xp
-#             RHSt[i,j] = Ry*Ly/2
-            
-#     """
-#     I need a zero-finding routine to map:
-#         - sliding: LHSs-RHSs
-#         - toppling: LHSt-RHSt
-#     """
-#     # Slidding:
-#     arr_sliding = LHSs-RHSs        
-#     hcrit_sliding = zero_finding(arr_sliding, v, h)
-#     # Toppling:
-#     arr_toppling = LHSt-RHSt        
-#     hcrit_toppling = zero_finding(arr_toppling, v, h)
-
-#     return hcrit_flot, v, hcrit_sliding, v, hcrit_toppling
 
 # Limit state: flotation -----------------------------------------------------
 
@@ -266,27 +195,6 @@ def get_fA_V2(h,Lz):
     fA = a0 + a1*(h/Lz) + a2*(h/Lz)**2 + a3*(h/Lz)**3 #+ a4*(h/Lz)**4 
     
     return fA
-
-# def get_PSI_car(h,Lz):
-#     """
-#     This function obtains the projected wetted area in the frontal direction
-#     for the case of a car. This is based on analysis of side images of cars.
-#     Total area:
-#         Axz = PSI*Lx*Lz
-#     """
-#     # PSI = np.ones_like(h)   
-    
-#     a0 = -0.022209790806162293 # zero-order param
-#     a1 = 2.7013864027501824 # first-order param
-#     a2 = -2.738099023102069 # second-order param
-#     a3 = 0.7524523329486932 # third-order param
-#     a4 = 0 # fourth-order param
-    
-#     PSI = a0 + a1*(h/Lz) + a2*(h/Lz)**2 + a3*(h/Lz)**3 + a4*(h/Lz)**4 
-    
-#     #PSI = 0.85*np.ones_like(h)  
-#     return PSI
-
 
 
 
