@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-19.01.2022
+Created: 19.01.2022
 Onset of stability for urban flood drifters (UFD).
-Exemplary code for the calculation of a given car (Audi Q7)
+Exemplary code for the calculation of a given car (Audi Q7).
+The code can be easily adapted to other types of cars by
+modifying their physical characteristics (section: Params definition).
+"Other relevant parameters" should only be considered when
+there is new information.
 @author: D. Valero
 
 """
