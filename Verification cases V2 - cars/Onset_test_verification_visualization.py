@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-19.01.2022
+Created: 19.01.2022
 Onset of stability for urban flood drifters (UFD).
 Verification case: vehicles from literature.
+This code imports calculations done for different cars, and plots them together.
+For new calculations, consider the Onset_test_Q7.py code.
 @author: D. Valero
 """
 
