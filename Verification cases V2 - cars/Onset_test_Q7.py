@@ -23,7 +23,7 @@ zc =  0.204 # m, distance from street floor to car underfloor
 # Other relevant parameters --------------------------------------------------
 rhow = 998 # kg/m3, water
 g = 9.81 # m/s2, gravity
-Cd = 0.85 # 1.38 # drag coefficient # FIG.11 Smith et al. 2019
+CD = 0.85 # 1.38 # drag coefficient # FIG.11 Smith et al. 2019
 fV1 = 0.05
 fV2 = 0.50
 
@@ -35,13 +35,15 @@ v = np.linspace(0, 9.5, nv)
 # ----------------------------------------------------------------------------
 # Start calculations ---------------------------------------------------------
 
+# GET LIMIT STATES
+
 # Flotation limit state ------------------------------------------------------
 
-Ry = M*g # Resistance
-fV = fa.get_fV(fV1, fV2, h, zc, Lz) # Get an fV for each h?
-Sy = rhow*g*fV*h*Lx*Ly # Load
+Rz = M*g # Resistance
+fV = fa.get_fV(fV1, fV2, h, zc, Lz) # Get an eta for each h?
+Sz = rhow*g*fV*h*Lx*Ly # Load
 
-hflot = Ry/(rhow*g*fV*Lx*Ly)
+hflot = Rz/(rhow*g*fV*Lx*Ly)
 ZC = np.where(np.diff(np.sign(hflot-h)))[0] # zero crossings
 hcrit_flot = h[ZC[0]]
 
@@ -51,33 +53,39 @@ fA = fa.get_fA_V2(h,Lz)
 
 H, V = np.meshgrid(h,v)
 LHSs = np.zeros_like(H); RHSs = np.zeros_like(H)
-Sx = np.zeros_like(H)
+Sy = np.zeros_like(H)
 for i in range(0, nv): # - velocity
     for j in range(0, nh): # - depths
 
-        # Nested in y
-        Sx[i,j] = 0.5 *(rhow*Cd*fA[j]*Lx*H[i,j]*V[i,j]*V[i,j])
-        LHSs[i,j] = Sx[i,j] # Sx
-        RHSs[i,j] = mu*(Ry-Sy[j]) # Rx
+        # Alternative 2 - nested in y
+        Sy[i,j] = 0.5 *(rhow*CD*fA[j]*Lx*H[i,j]*V[i,j]*V[i,j])
+        LHSs[i,j] = Sy[i,j] # Sx
+        RHSs[i,j] = mu*(Rz-Sz[j]) # Rx
         
+
+# css = plt.contour(V, H, (LHSs-RHSs), levels=[-0.0001,0,0.0001], colors='k')
+# ps = css.collections[0].get_paths()[0]
+# vs = ps.vertices
+# vxcrit_sliding = vs[:,0]
+# hcrit_sliding = vs[:,1]
+
 # Toppling limit state ------------------------------------------------------
 
 LHSt = np.zeros_like(H); RHSt = np.zeros_like(H)
 for i in range(0, nv):
     for j in range(0, nh):
 
-        # Nested in x and y
-
-        if H[i,j] > zc:
-            yp = (H[i,j]-zc)/2
-        else:
-            yp = (H[i,j])/2
-
-        xp2 = Ly/2
-        xp = xp2
+        # Alternative 2 - nested in x and y
         
-        LHSt[i,j] = Sx[i,j]*yp + Sy[j]*xp
-        RHSt[i,j] = Ry*Ly/2
+        if H[i,j] > zc:
+            zp = (H[i,j]-zc)/2
+        else:
+            zp = (H[i,j])/2
+
+        yp = Ly/2
+        
+        LHSt[i,j] = Sy[i,j]*zp + Sz[j]*yp
+        RHSt[i,j] = Rz*Ly/2
         
         
 """
@@ -85,6 +93,7 @@ I need a zero-finding routine to map:
     - sliding: LHSs-RHSs
     - toppling: LHSt-RHSt
 """
+
 
 arrs = LHSs-RHSs        
 hcrit_sliding = fa.zero_finding(arrs, v, h)
