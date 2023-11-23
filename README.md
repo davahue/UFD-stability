@@ -9,8 +9,8 @@ The UFD subcategories considered are those of Table 2 of: Bayon, Valero and Fran
 |                 |             | V3 | Vans              |
 |                 |             | V4 | Caravans & RVs    |
 |                 |             | V5 | Large heavy vehicles |
-|                 |             | F1 | Urban fixtures    |
-| (UFD-F)         | Furniture   | F2 | Household equipment |
+|  (UFD-F)        | Furniture   | F1 | Urban fixtures    |
+|                  |            | F2 | Household equipment |
 | **Heterog. UFDs** | (UFD-H)    | DC | Construction      |
 |                 |             | DM | Metal             |
 |                 |             | DP | Plastic           |
